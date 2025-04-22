@@ -9,15 +9,12 @@ namespace COMP003.LectureActivity5.Controllers
     [Route("api/[controller]")]
     public class ProductsController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
 
         // GET: api/products
         // This endpoint retrieves all products.
         [HttpGet]
-        public ActionResult<List<ProductsController>> GetProducts()
+        public ActionResult<List<Product>> GetProducts()
         {
             // returns all products from the ProductStore
             return Ok(ProductStore.Products);
@@ -73,6 +70,57 @@ namespace COMP003.LectureActivity5.Controllers
             // Return a 204 No Content response to indicate success
             return NoContent();
         }
+
+        // DELETE: api/products/{id}
+        // This endpoint deletes a product by its ID.
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProduct(int id)
+        {
+            // Find the product with the specified ID
+            var product = ProductStore.Products.FirstOrDefault(p => p.Id == id);
+
+            // if the product is not found, return a 404 Not Found response
+            if(product is null) 
+                return NotFound();
+
+            // Remove the product from the ProductStore
+            ProductStore.Products.Remove(product);
+
+            // Return a 204 No Content response to indicate success
+            return NoContent();
+        }
+
+        // GET: api/products/filter?price={price}
+        // This endpoint retrieves products filtered by price.
+        [HttpGet("filter")]
+        public ActionResult<List<Product>> FilterProducts (decimal price)
+        {
+            // Filter products based on the specified price and order them ny price
+            var filteredProducts = ProductStore.Products
+                .Where(p => p.Price <= price)
+                .OrderBy(p => p.Price)
+                .ToList();
+
+            // if no products match the filter, return a 404 Not Found response
+            return Ok(filteredProducts);
+        }
+
+        // GET: api/products/names
+        // This endpoint retrieves a list of product names.
+        [HttpGet("names")]
+        public ActionResult<List<string>> GetProductNames()
+        {
+            // Retrieve product names and order them alphabetically
+            var productNames = ProductStore.Products
+                .OrderBy(p => p.Name)
+                .Select(p => p.Name)
+                .ToList();
+
+            // if no product names are found, return a 404 Not Found response
+            return Ok(productNames);
+
+        }
+
 
     }
 }
