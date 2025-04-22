@@ -1,4 +1,10 @@
 
+/*
+ * Author: Jason Salinas
+ * Course: COMP-003B-L01
+ * Faculty: Jonathan Cruz
+ * Purpose: 5.5 Lecture Activity: Web API and LINQ 
+ */
 namespace COMP003.LectureActivity5
 {
     public class Program
